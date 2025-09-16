@@ -3,6 +3,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 
 export default defineNuxtConfig({
+  app: {
+     head: {
+         title: 'TP entropy'
+     }
+  },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
@@ -11,5 +16,5 @@ export default defineNuxtConfig({
        tailwindcss(),
       ],
   },
-  modules: ['@nuxt/ui', '@nuxt/test-utils']
+  modules: ['@nuxt/ui', '@nuxt/test-utils', 'nuxt-auth-utils']
 })
