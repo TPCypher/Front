@@ -32,15 +32,25 @@
       <input
           id="password"
           v-model="password"
-          @input="checkEntropy"
+          @input="e => checkEntropy((e.target as HTMLInputElement).value)"
           type="password"
           placeholder="Enter a password"
           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
       />
+      <!-- Label -->
       <p :class="entropyColor" class="mt-1 text-sm">
         {{ entropyLabel }}
       </p>
+
+      <!-- Progress bar -->
+      <div class="w-full h-2 bg-gray-200 rounded mt-2">
+        <div
+            class="h-2 rounded transition-all duration-300"
+            :class="entropyBg"
+            :style="{ width: `${progressValue}%` }"
+        ></div>
+      </div>
     </div>
 
     <!-- Confirm Password input -->
@@ -66,54 +76,24 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
+import {entropy, entropyColor, checkEntropy, entropyLabel, entropyBg} from "~/utils/entropy";
 
-// Fields
+// Fields ref
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 
-const entropy = ref(0) // Entropy value
-const entropyLabel = ref('Too weak')
-const entropyColor = ref('text-red-600')
 
-function checkEntropy() {
-  const pwd = password.value
-  if (!pwd) {
-    entropy.value = 0
-    entropyLabel.value = ''
-    entropyColor.value = ''
-    return
-  }
+// Compute progress percentage (cap at 100%)
+const progressValue = computed(() => {
+  console.log(progressValue.value)
+  return Math.min((entropy.value / 128) * 100, 100);
+});
 
-  let R = 0
-  if (/[a-z]/.test(pwd)) R += 26
-  if (/[A-Z]/.test(pwd)) R += 26
-  if (/[0-9]/.test(pwd)) R += 10
-  if (/[^a-zA-Z0-9]/.test(pwd)) R += 32
-
-  entropy.value = pwd.length * Math.log2(R)
-
-  if (entropy.value < 28) {
-    entropyLabel.value = 'Very Weak'
-    entropyColor.value = 'text-red-600'
-  } else if (entropy.value < 36) {
-    entropyLabel.value = 'Weak'
-    entropyColor.value = 'text-orange-500'
-  } else if (entropy.value < 60) {
-    entropyLabel.value = 'Reasonable'
-    entropyColor.value = 'text-yellow-500'
-  } else if (entropy.value < 128) {
-    entropyLabel.value = 'Strong'
-    entropyColor.value = 'text-green-600'
-  } else {
-    entropyLabel.value = 'Very Strong'
-    entropyColor.value = 'text-green-800'
-  }
-}
-
+// method to handle register action
 function handleRegister() {
   if (password.value !== confirmPassword.value) {
     alert('Passwords do not match!')

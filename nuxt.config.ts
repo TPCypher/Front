@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   app: {
      head: {
-         title: 'TP entropy'
+         title: 'TP entropy',
      }
   },
   compatibilityDate: '2025-07-15',
