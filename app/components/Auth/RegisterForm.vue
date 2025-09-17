@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleRegister" class="space-y-4">
+  <form @submit.prevent="register" class="space-y-4">
     <!-- Name input -->
     <div>
       <label class="block text-gray-700 mb-1" for="name">Full Name</label>
@@ -91,13 +91,18 @@ const password = ref('')
 const confirmPassword = ref('')
 
 
+const credentials = reactive({
+  name,
+  email,
+  password,
+})
+
 // Compute progress percentage (cap at 100%)
 const progressValue = computed(() => {
   return Math.min((entropy.value / 128) * 100, 100);
 });
 
-// method to handle register action
-function handleRegister() {
+async function register() {
   if (password.value !== confirmPassword.value) {
     alert('Passwords do not match!')
     return
@@ -106,6 +111,16 @@ function handleRegister() {
     alert('Password is too weak. Please choose a stronger one.')
     return
   }
-  console.log('Registered:', { name: name.value, email: email.value })
+
+  $fetch('http://back.localhost/api/utilisateur/register', {
+    method: 'POST',
+    body: credentials
+  })
+      .then(async () => {
+        await navigateTo('/login')
+      })
+      .catch((reason => {
+        console.log(reason)
+      }))
 }
 </script>
