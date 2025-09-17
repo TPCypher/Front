@@ -55,5 +55,4 @@ export function checkEntropy(password: string) {
         entropyColor.value = 'text-green-800'
         entropyBg.value = 'bg-green-800';
     }
-
 }
