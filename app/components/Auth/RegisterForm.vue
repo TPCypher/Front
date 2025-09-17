@@ -2,12 +2,12 @@
   <form @submit.prevent="register" class="space-y-4">
     <!-- Name input -->
     <div>
-      <label class="block text-gray-700 mb-1" for="name">Full Name</label>
+      <label class="block text-gray-700 mb-1" for="username">Full Name</label>
       <input
-          id="name"
-          v-model="name"
+          id="username"
+          v-model="username"
           type="text"
-          placeholder="Your name"
+          placeholder="Your username"
           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
       />
@@ -32,15 +32,21 @@
       <input
           id="password"
           v-model="password"
-          @input="e => checkEntropy((e.target as HTMLInputElement).value)"
+          @input="e => { checkEntropy((e.target as HTMLInputElement).value); validatePassword()}"
           type="password"
           placeholder="Enter a password"
           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
       />
-      <!-- Label -->
+
+      <!-- Inline messages -->
       <p :class="entropyColor" class="mt-1 text-sm">
         {{ entropyLabel }}
+      </p>
+      <p v-if="passwordErrors.length" class="text-red-600 text-sm mt-1">
+        <ul class="list-disc list-inside">
+          <li v-for="(err, idx) in passwordErrors" :key="idx">{{ err }}</li>
+        </ul>
       </p>
 
       <!-- Progress bar -->
@@ -68,6 +74,7 @@
           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           required
       />
+      <p v-if="confirmError" class="text-red-600 text-sm mt-1">{{ confirmError }}</p>
     </div>
 
     <!-- Submit button -->
@@ -81,46 +88,73 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {entropy, entropyColor, checkEntropy, entropyLabel, entropyBg, redundancyRatio} from "~/utils/entropy";
+import { ref, reactive, computed } from 'vue'
+import {
+  entropy,
+  entropyColor,
+  checkEntropy,
+  entropyLabel,
+  entropyBg,
+  redundancyRatio
+} from '~/utils/entropy'
 
-// Fields ref
-const name = ref('')
+const username = ref('')
 const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 
+// Error messages
+const passwordErrors = ref<string[]>([])
+const confirmError = ref('')
 
 const credentials = reactive({
-  name,
+  username,
   email,
   password,
 })
 
-// Compute progress percentage (cap at 100%)
-const progressValue = computed(() => {
-  return Math.min((entropy.value / 128) * 100, 100);
-});
+const progressValue = computed(() => Math.min((entropy.value / 128) * 100, 100))
+
+// Password validation function
+function validatePassword() {
+  const pwd = password.value
+  const errors: string[] = []
+
+  if (pwd.length < 12) errors.push('Password must be at least 12 characters.')
+  if (!/[A-Z]/.test(pwd)) errors.push('Include at least one uppercase letter.')
+  if (!/[a-z]/.test(pwd)) errors.push('Include at least one lowercase letter.')
+  if (!/[0-9]/.test(pwd)) errors.push('Include at least one number.')
+  if (!/[\W_]/.test(pwd)) errors.push('Include at least one special character.')
+
+  if(entropy.value < 75) errors.push('Password entropy is too low.')
+
+  passwordErrors.value = errors
+}
 
 async function register() {
+  // Confirm password check
   if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match!')
+    confirmError.value = 'Passwords do not match!'
     return
-  }
-  if (entropy.value < 75) { // Entropy value to low
-    alert('Password is too weak. Please choose a stronger one.')
-    return
+  } else {
+    confirmError.value = ''
   }
 
+  // Password errors
+  validatePassword()
+  if (passwordErrors.value.length > 0) return
+
+  // Submit request
   $fetch('http://back.localhost/api/utilisateur/register', {
     method: 'POST',
-    body: credentials
+    body: credentials,
   })
       .then(async () => {
         await navigateTo('/login')
       })
-      .catch((reason => {
+      .catch((reason) => {
         console.log(reason)
-      }))
+      })
 }
+
 </script>
