@@ -1,8 +1,7 @@
 <template>
   <div>
-    <LoginForm/>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>
-<script setup lang="ts">
-import LoginForm from "~/Form/LoginForm.vue";
-</script>
