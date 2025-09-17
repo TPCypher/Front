@@ -4,7 +4,7 @@ export const entropy = ref(0) // Entropy value
 export const entropyLabel = ref('Too weak')
 export const entropyColor = ref('text-red-600')
 export const entropyBg = ref('')
-
+export const redundancyRatio = ref(0) // entre 0 et 1
 
 export function checkGamme(password: string) : number {
     let R = 0;
@@ -21,6 +21,7 @@ export function checkEntropy(password: string) {
         entropy.value = 0
         entropyLabel.value = ''
         entropyColor.value = ''
+        redundancyRatio.value = 0
         return
     }
 
@@ -28,6 +29,10 @@ export function checkEntropy(password: string) {
     let gamme = checkGamme(pwd);
 
     entropy.value = pwd.length * Math.log2(gamme);
+
+    const maxEntropyPerChar = Math.log2(94);
+
+    redundancyRatio.value = 1 - (entropy.value / (password.length * maxEntropyPerChar))
 
     if (entropy.value < 28) {
         entropyLabel.value = 'Very Weak';
@@ -50,4 +55,5 @@ export function checkEntropy(password: string) {
         entropyColor.value = 'text-green-800'
         entropyBg.value = 'bg-green-800';
     }
+
 }

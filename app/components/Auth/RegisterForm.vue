@@ -51,6 +51,10 @@
             :style="{ width: `${progressValue}%` }"
         ></div>
       </div>
+
+      <p class="text-gray-600 text-sm mt-1">
+        Redundancy: {{ (redundancyRatio * 100).toFixed(3) }} %
+      </p>
     </div>
 
     <!-- Confirm Password input -->
@@ -78,7 +82,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {entropy, entropyColor, checkEntropy, entropyLabel, entropyBg} from "~/utils/entropy";
+import {entropy, entropyColor, checkEntropy, entropyLabel, entropyBg, redundancyRatio} from "~/utils/entropy";
 
 // Fields ref
 const name = ref('')
@@ -89,7 +93,6 @@ const confirmPassword = ref('')
 
 // Compute progress percentage (cap at 100%)
 const progressValue = computed(() => {
-  console.log(progressValue.value)
   return Math.min((entropy.value / 128) * 100, 100);
 });
 
