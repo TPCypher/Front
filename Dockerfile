@@ -13,6 +13,9 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the app
 COPY . .
 
+# Copy the production environment file
+COPY .env.production .env
+
 # Build the Nuxt app
 RUN npm run build
 

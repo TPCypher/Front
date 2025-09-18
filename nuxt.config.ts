@@ -1,8 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
 
-
 export default defineNuxtConfig({
+    runtimeConfig: {
+        backendUrl: process.env.BACKEND_URL, // private
+        public: {
+            backendUrl: process.env.BACKEND_URL, // exposed to client
+        },
+    },
   app: {
      head: {
          title: 'TP entropy',
