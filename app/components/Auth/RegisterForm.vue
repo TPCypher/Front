@@ -148,7 +148,7 @@ async function register() {
 
 
   // Submit request
-  $fetch(`http://java:8081/api/utilisateur/register`, {
+  $fetch(`http://backend.localhost/api/utilisateur/register`, {
     method: 'POST',
     body: credentials,
   }).then(async () => {
