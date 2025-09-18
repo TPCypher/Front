@@ -14,16 +14,17 @@ interface BackendUser {
 
 export default defineEventHandler(async (event) => {
     const body = await readBody<{ email: string; password: string }>(event)
+    const config = useRuntimeConfig()
 
     try {
         // 1. Authentification → récupère le token
-        const response = await $fetch<BackendLoginResponse>('http://localhost:8081/api/utilisateur/auth', {
+        const response = await $fetch<BackendLoginResponse>(`${config.backendUrl}/api/utilisateur/auth`, {
             method: 'POST',
             body
         })
 
         // 2. Appel backend pour récupérer les infos user
-        const user = await $fetch<BackendUser>('http://localhost:8081/api/utilisateur/get', {
+        const user = await $fetch<BackendUser>(`${config.backendUrl}/api/utilisateur/get`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${response.token}`
