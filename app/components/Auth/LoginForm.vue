@@ -41,7 +41,7 @@
 
 <script setup>
 import { ref } from 'vue'
-const { fetch: refreshSession } = useUserSession()
+const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession()
 
 const errorMessage = ref('')
 
@@ -50,18 +50,18 @@ const credentials = reactive({
   password: '',
 })
 
+const router = useRouter()
+
 async function login() {
-  $fetch('http://back.localhost/api/utilisateur/auth', {
-    method: 'POST',
-    body: credentials
-  })
-      .then(async () => {
-        // Refresh the session on client-side and redirect to the home page
-        await refreshSession()
-        await navigateTo('/')
-      })
-      .catch((reason => {
-        errorMessage.value = reason;
-      }))
+  try {
+    await $fetch('/api/login', {
+      method: 'POST',
+      body: credentials
+    })
+    console.log('Login success, redirecting...')
+    router.push({ path: "/" })
+  } catch (err) {
+    errorMessage.value = err.data?.message || 'Login failed'
+  }
 }
 </script>
