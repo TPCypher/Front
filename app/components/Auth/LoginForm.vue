@@ -61,7 +61,7 @@ async function login() {
         await navigateTo('/')
       })
       .catch((reason => {
-        console.log(reason)
+        errorMessage.value = reason;
       }))
 }
 </script>

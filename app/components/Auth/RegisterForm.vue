@@ -43,11 +43,11 @@
       <p :class="entropyColor" class="mt-1 text-sm">
         {{ entropyLabel }}
       </p>
-      <p v-if="passwordErrors.length" class="text-red-600 text-sm mt-1">
+      <div v-if="passwordErrors.length" class="text-red-600 text-sm mt-1">
         <ul class="list-disc list-inside">
           <li v-for="(err, idx) in passwordErrors" :key="idx">{{ err }}</li>
         </ul>
-      </p>
+      </div>
 
       <!-- Progress bar -->
       <div class="w-full h-2 bg-gray-200 rounded mt-2">
@@ -126,7 +126,7 @@ function validatePassword() {
   if (!/[0-9]/.test(pwd)) errors.push('Include at least one number.')
   if (!/[\W_]/.test(pwd)) errors.push('Include at least one special character.')
 
-  if(entropy.value < 75) errors.push('Password entropy is too low.')
+  if(entropy.value < 100) errors.push('Password entropy is too low.')
 
   passwordErrors.value = errors
 }
@@ -151,7 +151,7 @@ async function register() {
   }).then(async () => {
     await navigateTo('/login')
   }).catch((reason) => {
-    console.log(reason)
+    confirmError.value = reason;
   })
 }
 
