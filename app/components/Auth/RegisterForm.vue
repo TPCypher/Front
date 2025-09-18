@@ -148,13 +148,11 @@ async function register() {
   $fetch('http://back.localhost/api/utilisateur/register', {
     method: 'POST',
     body: credentials,
+  }).then(async () => {
+    await navigateTo('/login')
+  }).catch((reason) => {
+    console.log(reason)
   })
-      .then(async () => {
-        await navigateTo('/login')
-      })
-      .catch((reason) => {
-        console.log(reason)
-      })
 }
 
 </script>
