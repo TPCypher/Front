@@ -148,7 +148,7 @@ async function register() {
 
 
   // Submit request
-  $fetch(`http://backend.localhost/api/utilisateur/register`, {
+  $fetch(`http://back.localhost/api/utilisateur/register`, {
     method: 'POST',
     body: credentials,
   }).then(async () => {
