@@ -40,17 +40,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession()
-
+import { ref, reactive } from 'vue'
 const errorMessage = ref('')
 
 const credentials = reactive({
   email: '',
   password: '',
 })
-
-const router = useRouter()
 
 async function login() {
   try {
@@ -59,9 +55,10 @@ async function login() {
       body: credentials
     })
     console.log('Login success, redirecting...')
-    router.push({ path: "/" })
+    window.location.href = '/'
   } catch (err) {
     errorMessage.value = err.data?.message || 'Login failed'
   }
 }
+
 </script>
