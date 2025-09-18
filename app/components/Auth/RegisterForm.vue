@@ -144,8 +144,11 @@ async function register() {
   validatePassword()
   if (passwordErrors.value.length > 0) return
 
+  const config = useRuntimeConfig()
+
+
   // Submit request
-  $fetch('http://back.localhost/api/utilisateur/register', {
+  $fetch(`http://back.localhost/api/utilisateur/register`, {
     method: 'POST',
     body: credentials,
   }).then(async () => {

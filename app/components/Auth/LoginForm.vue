@@ -40,9 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const { fetch: refreshSession } = useUserSession()
-
+import { ref, reactive } from 'vue'
 const errorMessage = ref('')
 
 const credentials = reactive({
@@ -51,17 +49,16 @@ const credentials = reactive({
 })
 
 async function login() {
-  $fetch('http://back.localhost/api/utilisateur/auth', {
-    method: 'POST',
-    body: credentials
-  })
-      .then(async () => {
-        // Refresh the session on client-side and redirect to the home page
-        await refreshSession()
-        await navigateTo('/')
-      })
-      .catch((reason => {
-        errorMessage.value = reason;
-      }))
+  try {
+    await $fetch('/api/login', {
+      method: 'POST',
+      body: credentials
+    })
+    console.log('Login success, redirecting...')
+    window.location.href = '/'
+  } catch (err) {
+    errorMessage.value = err.data?.message || 'Login failed'
+  }
 }
+
 </script>

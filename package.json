@@ -9,19 +9,20 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "nuxt start"
-    },
+  },
   "dependencies": {
     "@nuxt/test-utils": "^3.19.2",
     "@nuxt/ui": "^3.3.4",
     "@tailwindcss/vite": "^4.1.13",
     "nuxt": "^4.1.2",
-    "nuxt-auth-utils": "^0.5.24",
+    "nuxt-auth-utils": "^0.5.25",
     "tailwindcss": "^4.1.13",
     "valibot": "^1.1.0",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "typescript": "^5.9.2",
     "vue-tsc": "^3.0.7"
   }
