@@ -146,9 +146,8 @@ async function register() {
 
   const config = useRuntimeConfig()
 
-
   // Submit request
-  $fetch(`http://back.localhost/api/utilisateur/register`, {
+  $fetch(`${config.externalBackendUrl}/api/utilisateur/register`, {
     method: 'POST',
     body: credentials,
   }).then(async () => {

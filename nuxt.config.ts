@@ -4,8 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
     runtimeConfig: {
         backendUrl: process.env.BACKEND_URL, // private
+        externalBackendUrl: process.env.EXTERNAL_BACKEND_URL,
         public: {
-            backendUrl: process.env.BACKEND_URL, // exposed to client
+            backendUrl: process.env.BACKEND_URL,
+            externalBackendUrl: process.env.EXTERNAL_BACKEND_URL,
         },
     },
   app: {
