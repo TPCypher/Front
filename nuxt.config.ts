@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
     runtimeConfig: {
-        backendUrl: process.env.BACKEND_URL, // private
+        backendUrl: process.env.BACKEND_URL,
         externalBackendUrl: process.env.EXTERNAL_BACKEND_URL,
         public: {
             backendUrl: process.env.BACKEND_URL,
@@ -14,6 +14,9 @@ export default defineNuxtConfig({
      head: {
          title: 'TP entropy',
      }
+  },
+  nitro: {
+      preset: 'node-server'
   },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
