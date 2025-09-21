@@ -15,6 +15,9 @@ export default defineNuxtConfig({
          title: 'TP entropy',
      }
   },
+  nitro: {
+      preset: 'node-server'
+  },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
